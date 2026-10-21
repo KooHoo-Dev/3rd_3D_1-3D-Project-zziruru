@@ -107,3 +107,6 @@ InitTestScene*.unity*
 
 # Claude Code project context (local only)
 /CLAUDE.md
+
+/Docs/
+/.idea/.idea.3rd_3D_1-3D-Project-zziruru/
