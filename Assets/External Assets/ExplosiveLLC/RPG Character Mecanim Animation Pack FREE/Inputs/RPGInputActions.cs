@@ -98,7 +98,7 @@ namespace RPGCharacterAnims
                     ""name"": ""AttackL"",
                     ""type"": ""Button"",
                     ""id"": ""12f351ba-2710-419f-bda3-bf2abf737ff4"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -107,7 +107,7 @@ namespace RPGCharacterAnims
                     ""name"": ""AttackR"",
                     ""type"": ""Button"",
                     ""id"": ""01a71673-bab7-492e-8129-87f3109d7a58"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -316,11 +316,33 @@ namespace RPGCharacterAnims
                 },
                 {
                     ""name"": """",
+                    ""id"": ""efd738ab-c0b1-4d11-a892-95ae2119b1df"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Mouse and Keyboard"",
+                    ""action"": ""AttackL"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""f0acae91-204f-447c-9ff5-24d26ff3cee5"",
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
+                    ""action"": ""AttackR"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""702d4551-8528-4b7c-b283-8bdb26cc8576"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Mouse and Keyboard"",
                     ""action"": ""AttackR"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
