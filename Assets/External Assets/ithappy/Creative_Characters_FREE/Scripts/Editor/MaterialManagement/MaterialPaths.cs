@@ -40,7 +40,7 @@ namespace ithappy.Creative_Characters_FREE.CharacterCustomizationTool.Editor.Mat
         private static string SearchInIthappy(string materialName)
         {
 #if UNITY_EDITOR
-            string[] guids = AssetDatabase.FindAssets("t:Material", new[] { "Assets/ithappy" });
+            string[] guids = AssetDatabase.FindAssets("t:Material", new[] { "Assets/External Assets/ithappy" });
 
             foreach (string guid in guids)
             {

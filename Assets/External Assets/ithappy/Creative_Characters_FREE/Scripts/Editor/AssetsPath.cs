@@ -8,7 +8,7 @@ namespace ithappy.Creative_Characters_FREE.CharacterCustomizationTool.Editor
         public static string SavedCharacters => _root + "Saved_Characters/";
         public static string SlotLibrary => _root + "Configs/SlotLibrary.asset";
 
-        private static string _root = "Assets/ithappy/" + PackageName + "/";
+        private static string _root = "Assets/External Assets/ithappy/" + PackageName + "/";
 
         public static void SetRoot(string root)
         {
