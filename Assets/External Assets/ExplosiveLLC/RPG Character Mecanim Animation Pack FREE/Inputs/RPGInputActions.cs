@@ -201,6 +201,15 @@ namespace RPGCharacterAnims
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""77f44d06-0081-4493-8fcf-362028f251df"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -278,17 +287,6 @@ namespace RPGCharacterAnims
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""WeaponUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""cff3abbd-e163-4163-8ebb-7e52d1508789"",
-                    ""path"": ""<Keyboard>/shift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Mouse and Keyboard"",
-                    ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -434,6 +432,17 @@ namespace RPGCharacterAnims
                     ""action"": ""WeaponDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""992ffbb4-3d8f-4bad-b2c9-1d994ce56452"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -476,6 +485,7 @@ namespace RPGCharacterAnims
             m_RPGCharacter_Aim = m_RPGCharacter.FindAction("Aim", throwIfNotFound: true);
             m_RPGCharacter_WeaponDown = m_RPGCharacter.FindAction("WeaponDown", throwIfNotFound: true);
             m_RPGCharacter_WeaponUp = m_RPGCharacter.FindAction("WeaponUp", throwIfNotFound: true);
+            m_RPGCharacter_Sprint = m_RPGCharacter.FindAction("Sprint", throwIfNotFound: true);
         }
 
         ~@RPGInputs()
@@ -568,6 +578,7 @@ namespace RPGCharacterAnims
         private readonly InputAction m_RPGCharacter_Aim;
         private readonly InputAction m_RPGCharacter_WeaponDown;
         private readonly InputAction m_RPGCharacter_WeaponUp;
+        private readonly InputAction m_RPGCharacter_Sprint;
         /// <summary>
         /// Provides access to input actions defined in input action map "RPGCharacter".
         /// </summary>
@@ -627,6 +638,10 @@ namespace RPGCharacterAnims
             /// Provides access to the underlying input action "RPGCharacter/WeaponUp".
             /// </summary>
             public InputAction @WeaponUp => m_Wrapper.m_RPGCharacter_WeaponUp;
+            /// <summary>
+            /// Provides access to the underlying input action "RPGCharacter/Sprint".
+            /// </summary>
+            public InputAction @Sprint => m_Wrapper.m_RPGCharacter_Sprint;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -689,6 +704,9 @@ namespace RPGCharacterAnims
                 @WeaponUp.started += instance.OnWeaponUp;
                 @WeaponUp.performed += instance.OnWeaponUp;
                 @WeaponUp.canceled += instance.OnWeaponUp;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
             }
 
             /// <summary>
@@ -736,6 +754,9 @@ namespace RPGCharacterAnims
                 @WeaponUp.started -= instance.OnWeaponUp;
                 @WeaponUp.performed -= instance.OnWeaponUp;
                 @WeaponUp.canceled -= instance.OnWeaponUp;
+                @Sprint.started -= instance.OnSprint;
+                @Sprint.performed -= instance.OnSprint;
+                @Sprint.canceled -= instance.OnSprint;
             }
 
             /// <summary>
@@ -886,6 +907,13 @@ namespace RPGCharacterAnims
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnWeaponUp(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSprint(InputAction.CallbackContext context);
         }
     }
 }
