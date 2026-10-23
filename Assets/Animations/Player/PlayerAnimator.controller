@@ -1653,6 +1653,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: LocomotionSpeed
+    m_Type: 1
+    m_DefaultFloat: 1
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -24469,7 +24475,7 @@ AnimatorState:
   m_TimeParameterActive: 0
   m_Motion: {fileID: 20685846}
   m_Tag: 
-  m_SpeedParameter: AnimationSpeed
+  m_SpeedParameter: LocomotionSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -26241,7 +26247,7 @@ AnimatorState:
   m_TimeParameterActive: 0
   m_Motion: {fileID: 20698388}
   m_Tag: 
-  m_SpeedParameter: AnimationSpeed
+  m_SpeedParameter: LocomotionSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -26323,6 +26329,12 @@ AnimatorStateMachine:
   m_StateMachineTransitions:
   - first: {fileID: 0}
     second: []
+  - first: {fileID: 110790042}
+    second:
+    - {fileID: -8779066467417052888}
+  - first: {fileID: 110744376}
+    second:
+    - {fileID: -2775903139161706648}
   - first: {fileID: 110719258}
     second: []
   - first: {fileID: 110719518}
@@ -26333,9 +26345,6 @@ AnimatorStateMachine:
     second: []
   - first: {fileID: 110736930}
     second: []
-  - first: {fileID: 110744376}
-    second:
-    - {fileID: -2775903139161706648}
   - first: {fileID: 110748144}
     second: []
   - first: {fileID: 110751632}
@@ -26350,9 +26359,6 @@ AnimatorStateMachine:
     second: []
   - first: {fileID: 110786634}
     second: []
-  - first: {fileID: 110790042}
-    second:
-    - {fileID: -8779066467417052888}
   - first: {fileID: 110795260}
     second: []
   m_StateMachineBehaviours: []

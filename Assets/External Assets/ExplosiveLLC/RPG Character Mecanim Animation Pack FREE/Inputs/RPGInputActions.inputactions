@@ -113,6 +113,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "77f44d06-0081-4493-8fcf-362028f251df",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -190,17 +199,6 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "WeaponUp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cff3abbd-e163-4163-8ebb-7e52d1508789",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -344,6 +342,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "WeaponDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "992ffbb4-3d8f-4bad-b2c9-1d994ce56452",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -26,6 +26,7 @@ namespace SesiVillage.Player
         private Vector2 inputMovement;
         private bool inputFace;
         private Vector2 inputFacing;
+        private bool inputSprint;
 
         // Variables.
         private Vector3 moveInput;
@@ -56,6 +57,7 @@ namespace SesiVillage.Player
         public bool HasAimInput() => inputAim;
 
         public bool HasFacingInput() => inputFacing != Vector2.zero || inputFace;
+        public bool HasSprintInput() => inputSprint;
 
         private void Update()
         {
@@ -114,6 +116,7 @@ namespace SesiVillage.Player
                 inputMovement = rpgInputs.RPGCharacter.Move.ReadValue<Vector2>();
                 inputRoll = rpgInputs.RPGCharacter.Roll.WasPressedThisFrame();
                 inputAim = rpgInputs.RPGCharacter.Aim.IsPressed();
+                inputSprint = rpgInputs.RPGCharacter.Sprint.IsPressed();
             }
             catch (System.Exception)
             {
