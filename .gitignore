@@ -107,6 +107,9 @@ InitTestScene*.unity*
 
 # Claude Code project context (local only)
 /CLAUDE.md
-
+/Reference/
 /Docs/
 /.idea/.idea.3rd_3D_1-3D-Project-zziruru/
+
+# macOS
+.DS_Store
