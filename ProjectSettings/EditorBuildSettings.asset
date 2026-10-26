@@ -11,9 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Village.unity
     guid: 7e4e90af75ad8f349bbce361103dc827
-  - enabled: 1
-    path: Assets/Scenes/Test_HousePrototype.unity
-    guid: f69efbf3e6dd0484d8c35bfd2b6de9da
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

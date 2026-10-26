@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bc7467119ab49de98c624426f45969c, type: 3}
+  m_Name: Quest_SeollalShrine
+  m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Quests.QuestDefinition
+  id: seollal_shrine
+  displayName: "\uCE60\uC131\uB2F9\uC5D0 \uB5A1\uAD6D \uBC14\uCE58\uAE30"
+  description: "\uC815\uC5B4\uC5B8\uC774 \uB053\uC5EC \uC900 \uB5A1\uAD6D\uC744 \uCE60\uC131\uB2F9\uC5D0
+    \uBC14\uCE58\uC790"
+  giverNpcId: chilseongdang
+  festival: 3
+  prerequisites:
+  - {fileID: 11400000, guid: bdcad2af69c1649d39fa08d22d7f878a, type: 2}
+  objectives:
+  - type: 3
+    targetId: chilseongdang
+    item: {fileID: 11400000, guid: e7eb06943996b6441836ca567dc9c267, type: 2}
+    requiredCount: 1
+    description: "\uCE60\uC131\uB2F9\uC5D0\uAC8C \uB5A1\uAD6D \uBC14\uCE58\uAE30"
+  rewards:
+  - item: {fileID: 11400000, guid: b5c85937af4d3044a9b95eff92ecfb7c, type: 2}
+    count: 1
