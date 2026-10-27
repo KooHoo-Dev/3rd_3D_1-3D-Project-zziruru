@@ -19,13 +19,14 @@ GameObject:
   - component: {fileID: 7567850014338790436}
   - component: {fileID: 885875905185609973}
   - component: {fileID: 8044742640323187917}
+  - component: {fileID: 1436803308276542600}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &400004
 Transform:
   m_ObjectHideFlags: 0
@@ -249,6 +250,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de44fe928ab52de4886dea7db3bad0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.PlayerSprint
+  sprintMultiplier: 1.6
+  blendSpeed: 4
+--- !u!114 &1436803308276542600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7991cc0270f8f4880a7571aa25d936ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Interaction.PlayerInteractor
+  range: 2.5
+  interactableLayers:
+    serializedVersion: 2
+    m_Bits: 4096
+  minFacingDot: 0.2
 --- !u!1 &629156792
 GameObject:
   m_ObjectHideFlags: 0

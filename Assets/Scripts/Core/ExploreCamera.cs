@@ -1,3 +1,4 @@
+using SesiVillage.UI;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -15,11 +16,33 @@ namespace SesiVillage.Core
     {
         private CinemachineCamera cinemachineCamera;
         private CinemachineOrbitalFollow orbitalFollow;
+        // UI 열렸을 때 카메라 회전 막기용
+        private CinemachineInputAxisController inputAxis;
         
         private void Awake()
         {
             cinemachineCamera = GetComponent<CinemachineCamera>();
             orbitalFollow = GetComponent<CinemachineOrbitalFollow>();
+            
+            inputAxis = GetComponent<CinemachineInputAxisController>();
+        }
+        
+        private void Start()
+        {
+            if (UIState.Instance == null) return;
+            UIState.Instance.Changed += OnUIChanged;
+            OnUIChanged(UIState.Instance.IsOpen);
+        }
+
+        private void OnDestroy()
+        {
+            if (UIState.Instance != null) UIState.Instance.Changed -= OnUIChanged;
+        }
+
+        /// <summary>UI가 열리면 마우스로 카메라가 돌지 않게 한다</summary>
+        private void OnUIChanged(bool uiOpen)
+        {
+            if (inputAxis != null) inputAxis.enabled = !uiOpen;
         }
         
         /// <summary>

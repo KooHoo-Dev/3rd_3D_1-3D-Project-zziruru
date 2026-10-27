@@ -1,3 +1,4 @@
+using SesiVillage.UI;
 using RPGCharacterAnims;
 using RPGCharacterAnims.Actions;
 using RPGCharacterAnims.Lookups;
@@ -50,6 +51,25 @@ namespace SesiVillage.Player
         private void OnDisable()
         {
             rpgInputs.Disable();
+        }
+        
+        private void Start()
+        {
+            if (UIState.Instance == null) return;
+            UIState.Instance.Changed += OnUIChanged;
+            OnUIChanged(UIState.Instance.IsOpen);
+        }
+        
+        private void OnDestroy()
+        {
+            if (UIState.Instance != null) UIState.Instance.Changed -= OnUIChanged;
+        }
+        
+        /// <summary>UI가 열리면 이동·공격 입력을 끈다 (꺼진 입력은 0으로 읽혀 제자리에 선다)</summary>
+        private void OnUIChanged(bool uiOpen)
+        {
+            if (uiOpen) rpgInputs.Disable();
+            else if (isActiveAndEnabled) rpgInputs.Enable();
         }
 
         public bool HasMoveInput() => moveInput.magnitude > 0.1f;
