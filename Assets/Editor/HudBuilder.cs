@@ -4,6 +4,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using SesiVillage.UI;
 using UnityEngine.UI;
 
 namespace SesiVillage.EditorTools
@@ -62,6 +63,17 @@ namespace SesiVillage.EditorTools
             label.alignment = TextAlignmentOptions.Center;
             label.color = Color.white;
             label.raycastTarget = false;
+
+            // 다시 만들면 예전 판을 가리키던 InteractionPromptView의 Root·Label 칸이 비므로 새 판으로 다시 연결한다
+            var view = canvas.GetComponentInChildren<InteractionPromptView>(true);
+            if (view != null)
+            {
+                var so = new SerializedObject(view);
+                so.FindProperty("root").objectReferenceValue = prompt;
+                so.FindProperty("label").objectReferenceValue = label;
+                so.ApplyModifiedProperties();
+            }
+            else Debug.LogWarning("[HudBuilder] InteractionPromptView가 없음 — HUDCanvas에 붙이고 Root·Label을 연결하세요");
 
             Selection.activeGameObject = prompt;
             EditorSceneManager.MarkSceneDirty(prompt.scene);

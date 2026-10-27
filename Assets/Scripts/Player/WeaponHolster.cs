@@ -22,6 +22,8 @@ namespace SesiVillage.Player
         
         /// <summary>지금 손에 무기를 들고 있는가</summary>
         public bool IsDrawn => character.rightWeapon != Weapon.Unarmed;
+        /// <summary>꺼낼 무기를 가지고 있는가 (Equipped Weapon이 Unarmed면 맨손 전투)</summary>
+        public bool HasWeapon => equippedWeapon != Weapon.Unarmed;
         
         private void Awake()
         {

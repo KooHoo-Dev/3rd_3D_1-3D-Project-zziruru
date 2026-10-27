@@ -12,6 +12,7 @@ namespace SesiVillage.Player
     {
         RPGCharacterController rpgCharacterController;
         private WeaponHolster weaponHolster;
+        private CombatStance combatStance;
 
         //InputSystem
         public @RPGInputs rpgInputs;
@@ -39,6 +40,7 @@ namespace SesiVillage.Player
         {
             rpgCharacterController = GetComponent<RPGCharacterController>();
             weaponHolster = GetComponent<WeaponHolster>();
+            combatStance = GetComponent<CombatStance>();
             rpgInputs = new @RPGInputs();
             currentAim = Vector3.zero;
         }
@@ -262,8 +264,8 @@ namespace SesiVillage.Player
         {
             if (!inputAttackL && !inputAttackR) { return; }
             
-            // 맨손이면 공격 대신 칼을 꺼낸다. (기획: 평소엔 칼을 넣어 두고 공격 키로 꺼냄)
-            if (!weaponHolster.IsDrawn)
+            // 무기가 있는데 아직 안 꺼냈으면 → 꺼내기만. 무기가 없으면 아래로 내려가서 맨손 공격
+            if (weaponHolster.HasWeapon && !weaponHolster.IsDrawn)
             {
                 weaponHolster.Draw();
                 return;
@@ -283,6 +285,8 @@ namespace SesiVillage.Player
             
             // 공격할 때마다 자동 넣기 타이머를 다시 잰다.
             weaponHolster.NotifyAttack();
+            // 맨손 전투 자세는 무기가 없을 때만 (무기가 있으면 칼을 넣는 순간 바로 편한 자세)
+            if (!weaponHolster.HasWeapon) combatStance.NotifyAttack();
 
             if (inputAttackL)
             {

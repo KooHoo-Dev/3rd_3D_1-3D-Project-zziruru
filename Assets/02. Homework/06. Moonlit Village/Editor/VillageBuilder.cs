@@ -1083,8 +1083,8 @@ namespace MoonlitVillage.EditorTools
 
             // 대청: 촌장·촌장부인 자리, 낮은 상
             Prim(PrimitiveType.Cube, "LowTable", t, new Vector3(hallCX, floorY + 0.25f, H.z + 1.6f * BuildingScale), new Vector3(1.6f, 0.5f, 0.9f), M.plank);
-            Marker(t, "NPCSpot_Chief", new Vector3(hallCX - 1.2f * BuildingScale, floorY, H.z + 1.5f * BuildingScale));
-            Marker(t, "NPCSpot_ChiefWife", new Vector3(hallCX + 1.8f * BuildingScale, floorY, H.z + 1.0f * BuildingScale));
+            NpcSpotMarker(t, "chief", new Vector3(hallCX - 1.2f * BuildingScale, floorY, H.z + 1.5f * BuildingScale));
+            NpcSpotMarker(t, "chief_wife", new Vector3(hallCX + 1.8f * BuildingScale, floorY, H.z + 1.0f * BuildingScale));
             JarStand(M, t, new Vector2(H.x - W / 2f + 2.4f, H.z + 2.2f * BuildingScale), 2, floorY);
 
             // 사랑방(온돌방): 이불과 잠자리 표시. 플레이어가 여기서 자고 시간대를 넘긴다
@@ -1329,7 +1329,7 @@ namespace MoonlitVillage.EditorTools
             // 제단과 NPC 자리
             Prim(PrimitiveType.Cube, "Altar", t, new Vector3(H.x, floorY + 0.45f, backZ - 0.8f), new Vector3(2.4f, 0.9f, 0.8f), M.redWood);
             Prim(PrimitiveType.Cube, "AltarCloth", t, new Vector3(H.x, floorY + 0.92f, backZ - 0.8f), new Vector3(2.5f, 0.05f, 0.85f), M.signBoard, null, false);
-            Marker(t, "NPCSpot", new Vector3(H.x + 1.0f * BuildingScale, floorY, H.z));
+            NpcSpotMarker(t, "shrine", new Vector3(H.x + 1.0f * BuildingScale, floorY, H.z));
 
             var roof = new GameObject(RoofGroupName);
             roof.transform.SetParent(t);
@@ -1395,6 +1395,14 @@ namespace MoonlitVillage.EditorTools
         {
             var g = new GameObject(name); g.transform.SetParent(root);
             g.transform.position = pos; g.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+
+        // NPC 자리: Marker + NpcSpot(ID). Village_GamePlay 씬의 NPC(NpcPlacement)가 같은 ID로 찾아온다
+        static void NpcSpotMarker(Transform root, string spotId, Vector3 pos)
+        {
+            var g = new GameObject("NPCSpot_" + spotId); g.transform.SetParent(root);
+            g.transform.position = pos; g.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            g.AddComponent<SesiVillage.NPC.NpcSpot>().Init(spotId);
         }
 
         static void RoomLight(Transform root, string name, Vector3 pos, float intensity, float range = 8f)
@@ -1555,7 +1563,7 @@ namespace MoonlitVillage.EditorTools
             // 실내: 벽 쪽에만 소품, 가운데는 비워 둔다. NPC 자리 표시
             JarStand(M, t, new Vector2(H.x + W / 2f - 2.4f, H.z + 1.5f * BuildingScale), 3, floorY);
             Prim(PrimitiveType.Cube, "LowTable", t, new Vector3(H.x - W / 2f + 1.6f, floorY + 0.25f, H.z + 1.6f * BuildingScale), new Vector3(1.4f, 0.5f, 0.9f), M.plank);
-            Marker(t, "NPCSpot", new Vector3(H.x - 1.5f * BuildingScale, floorY, H.z + 1.4f * BuildingScale));
+            NpcSpotMarker(t, h.id.ToLowerInvariant(), new Vector3(H.x - 1.5f * BuildingScale, floorY, H.z + 1.4f * BuildingScale));
 
             if (withStorage)
             {

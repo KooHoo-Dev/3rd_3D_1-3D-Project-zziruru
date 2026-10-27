@@ -871,6 +871,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.GameBootstrap
   villageSceneName: Village
+  gameplaySceneNames:
+  - Village_GamePlay
   player: {fileID: 366311435}
   exploreCamera: {fileID: 522239720}
 --- !u!1 &739544028
@@ -906,8 +908,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.UI.InteractionPromptView
   interactor: {fileID: 366311436}
-  root: {fileID: 0}
-  label: {fileID: 0}
+  root: {fileID: 169705868}
+  label: {fileID: 398363573}
   keyText: E
 --- !u!114 &739544030
 MonoBehaviour:

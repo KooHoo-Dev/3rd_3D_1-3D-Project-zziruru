@@ -1659,6 +1659,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: Combat
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -26332,14 +26338,18 @@ AnimatorStateMachine:
   - first: {fileID: 110790042}
     second:
     - {fileID: -8779066467417052888}
+  - first: {fileID: 110782256}
+    second: []
+  - first: {fileID: 110795260}
+    second: []
   - first: {fileID: 110744376}
     second:
     - {fileID: -2775903139161706648}
+  - first: {fileID: 110726132}
+    second: []
   - first: {fileID: 110719258}
     second: []
   - first: {fileID: 110719518}
-    second: []
-  - first: {fileID: 110726132}
     second: []
   - first: {fileID: 110732002}
     second: []
@@ -26355,11 +26365,7 @@ AnimatorStateMachine:
     second: []
   - first: {fileID: 110780050}
     second: []
-  - first: {fileID: 110782256}
-    second: []
   - first: {fileID: 110786634}
-    second: []
-  - first: {fileID: 110795260}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 670, y: -220, z: 0}
@@ -44909,6 +44915,11 @@ AnimatorStateMachine:
   m_StateMachineTransitions:
   - first: {fileID: 0}
     second: []
+  - first: {fileID: 110726132}
+    second:
+    - {fileID: 110992538}
+    - {fileID: 6044097717208692387}
+    - {fileID: -4942492230701608450}
   - first: {fileID: 110719258}
     second:
     - {fileID: -2233125134112920020}
@@ -44917,11 +44928,6 @@ AnimatorStateMachine:
     second:
     - {fileID: 5369254505509025384}
     - {fileID: 2062738512628176763}
-  - first: {fileID: 110726132}
-    second:
-    - {fileID: 110992538}
-    - {fileID: 6044097717208692387}
-    - {fileID: -4942492230701608450}
   - first: {fileID: 110748144}
     second:
     - {fileID: 110957488}
@@ -63272,6 +63278,13 @@ AnimatorStateMachine:
   m_StateMachineTransitions:
   - first: {fileID: 0}
     second: []
+  - first: {fileID: 110782256}
+    second:
+    - {fileID: 110959028}
+  - first: {fileID: 110795260}
+    second:
+    - {fileID: 110973192}
+    - {fileID: 8296522807890243291}
   - first: {fileID: 110732002}
     second:
     - {fileID: 2476130875777377660}
@@ -63284,17 +63297,10 @@ AnimatorStateMachine:
     second:
     - {fileID: -175873108818544760}
     - {fileID: 7390816438044216647}
-  - first: {fileID: 110782256}
-    second:
-    - {fileID: 110959028}
   - first: {fileID: 110786634}
     second:
     - {fileID: 4744131415663963817}
     - {fileID: -8448255879107576058}
-  - first: {fileID: 110795260}
-    second:
-    - {fileID: 110973192}
-    - {fileID: 8296522807890243291}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 250, y: 250, z: 0}
   m_EntryPosition: {x: 140, y: 100, z: 0}
@@ -153383,7 +153389,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 94c75858633b4e04f9e28db3b52b2bba, type: 3}
+    m_Motion: {fileID: 7400000, guid: 37a91236e993191439a517783927f5a1, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -153391,14 +153397,14 @@ BlendTree:
     m_DirectBlendParameter: Idle
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 8043696a9af6e2947bf6bcbd25ecf2d9, type: 3}
+    m_Motion: {fileID: 7400000, guid: 94c75858633b4e04f9e28db3b52b2bba, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Idle
     m_Mirror: 0
-  m_BlendParameter: Idle
+  m_BlendParameter: Combat
   m_BlendParameterY: Idle
   m_MinThreshold: 0
   m_MaxThreshold: 1
