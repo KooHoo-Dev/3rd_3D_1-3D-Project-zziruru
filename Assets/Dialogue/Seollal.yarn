@@ -1,0 +1,55 @@
+﻿title: jeongeoeon
+---
+<<declare $turn_in = "">>
+<<declare $deliver = "">>
+<<if quest_state("seollal_weed") == "NotAccepted">>
+    정어언: 어서 와요. 설 차례를 지내야 하는데 묘지에 잡초가 무성해서 큰일이에요.
+    정어언: 잡초를 다섯 포기만 베어다 줄 수 있어요?
+    -> 네, 도와드릴게요.
+        <<accept seollal_weed>>
+        정어언: 고마워요! 묘지는 마을 남쪽이에요.
+    -> 나중에요.
+        정어언: 그래요, 마음 바뀌면 다시 와요.
+<<elseif quest_state("seollal_weed") == "Rewarded">>
+    정어언: 새해 복 많이 받아요! 떡국은 칠성당에 바쳤어요?
+<<elseif quest_state("seollal_weed") == "Completed">>
+    <<turn_in seollal_weed>>
+    <<if $turn_in == "Rewarded">>
+        정어언: 아까 못 준 떡국이에요. 이제 들어가겠네요!
+        정어언: 칠성당에 바치면 좋은 일이 있을 거예요.
+    <<else>>
+        정어언: 아직도 가방이 가득하네요. 비우고 다시 와요.
+    <<endif>>
+<<else>>
+    <<turn_in seollal_weed>>
+    <<if $turn_in == "Rewarded">>
+        정어언: 다 베어 왔네요! 자, 떡국 한 그릇 받아요.
+        정어언: 칠성당에 바치면 좋은 일이 있을 거예요.
+    <<elseif $turn_in == "InventoryFull">>
+        정어언: 가방이 가득 찼네요. 조금 비우고 다시 와요.
+    <<else>>
+        정어언: 잡초가 아직 모자라요. 다섯 포기예요.
+    <<endif>>
+<<endif>>
+===
+title: chilseongdang
+---
+<<if quest_state("seollal_shrine") == "Rewarded">>
+    칠성당: 올 한 해 무탈하기를….
+<<elseif quest_state("seollal_shrine") == "NotAccepted" and not can_accept("seollal_shrine")>>
+    칠성당: (조용한 사당이다. 아직은 바칠 것이 없다.)
+<<else>>
+    <<if quest_state("seollal_shrine") == "NotAccepted">>
+        <<accept seollal_shrine>>
+    <<endif>>
+    <<deliver seollal_shrine chilseongdang>>
+    <<turn_in seollal_shrine>>
+    <<if $turn_in == "Rewarded">>
+        칠성당: 정성이 담긴 떡국이구나. 이 설빔을 입고 새해를 맞이하거라.
+    <<elseif $turn_in == "InventoryFull">>
+        칠성당: 옷을 넣을 자리가 없구나. 짐을 비우고 다시 오거라.
+    <<else>>
+        칠성당: 떡국을 가져오너라. 설날집 정어언이 끓이고 있단다.
+    <<endif>>
+<<endif>>
+===

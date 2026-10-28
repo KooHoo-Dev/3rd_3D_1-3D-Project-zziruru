@@ -24,8 +24,8 @@ namespace SesiVillage.Interaction
 
         public void Interact(GameObject interactor)
         {
-            // TODO(4단계): 대화 시작으로 교체 → DialogueDirector.Instance.StartTalk(npcId)
-            Debug.Log($"[NPC] {displayName}({npcId}) ← {interactor.name}");
+            if (DialogueDirector.Instance == null) { Debug.LogWarning("[NPC] DialogueDirector 없음", this); return; }
+            DialogueDirector.Instance.StartTalk(npcId);
         }
     }
 }

@@ -19,6 +19,8 @@ namespace SesiVillage.UI
 
         /// <summary>열림 ↔ 닫힘이 바뀔 때만 (true = 처음 하나가 열림, false = 마지막 하나가 닫힘)</summary>
         public event Action<bool> Changed;
+        /// <summary>마지막 UI가 닫힌 프레임 (그 프레임의 입력이 게임으로 새지 않게)</summary>
+        public int ClosedFrame { get; private set; } = -1;
         
         private void Awake()
         {
@@ -48,7 +50,10 @@ namespace SesiVillage.UI
         public void Close(object owner)
         {
             if (owners.Remove(owner) && !IsOpen)
+            {
+                ClosedFrame = Time.frameCount;   // 닫힌 프레임을 기억
                 Changed?.Invoke(false);
+            }
         }
     }
 }

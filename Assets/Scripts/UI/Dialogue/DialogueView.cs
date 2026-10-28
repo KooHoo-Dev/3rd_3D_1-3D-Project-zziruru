@@ -5,12 +5,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System.Threading;   // CancellationToken
 
 namespace SesiVillage.UI
 {
     /// <summary>
     /// 대화창 + 선택지 (UGUI). 수업 UI 갤러리의 DialogueView를 우리 게임에 맞게 줄인 것.
-    /// 대사가 어디서 오는지(Yarn 등)는 모른다 → 바깥에서 ShowLine / ShowChoices를 부르고, 끝나면 콜백으로 알려 준다.
+    /// 대사가 어디서 오는지(Yarn 등)는 모른다.
+    /// ShowLineAsync / ShowChoicesAsync를 await하면 플레이어가 넘기거나 고를 때까지 기다린다.
     ///  · 타자기: 문장 전체를 넣고 maxVisibleCharacters만 늘린다 (태그·줄바꿈이 깨지지 않음)
     ///  · 입력 소비: 타이핑 중 첫 입력 = 문장 완성, 다음 입력 = 다음 줄. 입력을 처리한 프레임은 거기서 끝낸다
     ///  · 입력 잠금: 선택지가 열린 직후 inputLockSeconds 동안 확정을 무시 → 연타가 선택지를 관통하지 않는다
@@ -58,8 +60,8 @@ namespace SesiVillage.UI
         private GameObject lastSelected;
         private Coroutine slide;
 
-        private Action onLineDone;             // 이번 줄을 넘겼을 때 부를 함수
-        private Action<int> onChoiceDone;      // 선택지를 골랐을 때 부를 함수 (고른 번호)
+        private AwaitableCompletionSource lineDone;           // 이번 줄을 넘기면 완료
+        private AwaitableCompletionSource<int> choiceDone;    // 선택지를 고르면 완료 (고른 번호)
 
         private void Awake()
         {
@@ -104,17 +106,25 @@ namespace SesiVillage.UI
             SetChoicesVisible(false);
             nextIndicator.SetActive(false);
             root.blocksRaycasts = false;
-            onLineDone = null;
-            onChoiceDone = null;
+            
+            // 아직 기다리는 쪽이 있으면 "취소"로 깨워 준다 (안 그러면 그 await가 영원히 멈춤)
+            // 순서: 지역 변수로 옮기고 → 필드를 비우고 → 마지막에 깨우기 (FinishLine과 같은 이유)
+            var pendingLine = lineDone;
+            var pendingChoice = choiceDone;
+            lineDone = null;
+            choiceDone = null;
+            
             PlaySlide(false);
             Closed?.Invoke();
+            
+            pendingLine?.TrySetCanceled();
+            pendingChoice?.TrySetCanceled();
         }
 
-        /// <summary>한 줄을 보여 준다. 플레이어가 다 읽고 넘기면 onDone이 불린다</summary>
-        public void ShowLine(string speaker, string text, Action onDone)
+        /// <summary>한 줄을 보여 준다. 플레이어가 다 읽고 넘길 때까지 기다린다. ct가 취소되면 OperationCanceledException </summary>
+        public async Awaitable ShowLineAsync(string speaker, string text, CancellationToken ct = default)
         {
             Open();
-            onLineDone = onDone;
             speakerName.text = speaker ?? "";
             speakerName.gameObject.SetActive(!string.IsNullOrEmpty(speaker));   // 이름 없는 줄(해설)은 이름표를 숨김
 
@@ -127,17 +137,26 @@ namespace SesiVillage.UI
             delay = 0f;
             state = State.Typing;
             nextIndicator.SetActive(false);
+            
+            var source = new AwaitableCompletionSource();
+            lineDone = source;
+            
             if (typeSpeedCps <= 0f) Complete();
+            
+            // 바깥(Yarn)이 취소하면 약속도 취소 → await가 예외로 빠져나옴
+            using (ct.Register(() => source.TrySetCanceled()))
+                await source.Awaitable;
         }
 
-        /// <summary>선택지를 보여 준다. 고르면 onChosen(고른 번호)이 불린다</summary>
-        public void ShowChoices(IReadOnlyList<string> options, Action<int> onChosen)
+        /// <summary>선택지를 보여 주고, 고른 번호를 돌려준다</summary>
+        public async Awaitable<int> ShowChoicesAsync(IReadOnlyList<string> options, CancellationToken ct = default)
         {
             Open();
             if (options.Count > choiceButtons.Length)
                 Debug.LogWarning($"[DialogueView] 선택지 {options.Count}개 중 {choiceButtons.Length}개만 표시 (버튼을 더 만들어야 함)", this);
 
-            onChoiceDone = onChosen;
+            var source = new AwaitableCompletionSource<int>();
+            choiceDone = source;
             choiceCount = Mathf.Min(options.Count, choiceButtons.Length);
             state = State.ChoiceOpen;
             nextIndicator.SetActive(false);
@@ -152,6 +171,9 @@ namespace SesiVillage.UI
             StartCoroutine(RevealChoices());
             focus = 0;
             Select(choiceButtons[0].gameObject);      // 열리면 첫 항목에 포커스
+            
+            using (ct.Register(() => source.TrySetCanceled()))
+                return await source.Awaitable;
         }
 
         /// <summary>넘기기 입력 하나 — 한 단계만 처리한다 (입력 소비)</summary>
@@ -200,11 +222,11 @@ namespace SesiVillage.UI
 
         private void FinishLine()
         {
-            if (onLineDone == null) return;           // 아직 다음 줄을 기다리는 중
-            var done = onLineDone;
-            onLineDone = null;                        // 먼저 비운다 → 콜백 안에서 바로 다음 ShowLine이 와도 안전
+            if (lineDone == null) return;          // 아직 다음 줄을 기다리는 중
+            var done = lineDone;
+            lineDone = null; // 먼저 비운다 → TrySetResult 안에서 바로 다음 ShowLineAsync가 와도 안전            
             nextIndicator.SetActive(false);
-            done();
+            done.TrySetResult();
         }
 
         /* ───────── 매 프레임 ───────── */
@@ -250,9 +272,9 @@ namespace SesiVillage.UI
                     {
                         SetChoicesVisible(false);
                         state = State.LineComplete;
-                        var done = onChoiceDone;
-                        onChoiceDone = null;
-                        done?.Invoke(chosen);
+                        var done = choiceDone;
+                        choiceDone = null;
+                        done?.TrySetResult(chosen);
                     }
                     break;
             }

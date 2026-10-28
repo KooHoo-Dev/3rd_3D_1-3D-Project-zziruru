@@ -48,10 +48,11 @@ namespace SesiVillage.Interaction
             {
                 Current = best;
                 FocusChanged?.Invoke(Current);
-                Debug.Log($"[PlayerInteractor] 대상: {(Current as Component)?.name ?? "없음"}");   // 확인용, 2단계에서 지움
             }
-
-            if (Current != null && interactAction.WasPressedThisFrame())
+            
+            // UI를 닫은 그 프레임의 E는 "대화 닫기"에 쓰인 것 → 다시 말 걸기로 쓰지 않음
+            bool closedThisFrame = UIState.Instance != null && UIState.Instance.ClosedFrame == Time.frameCount;
+            if (Current != null && !closedThisFrame && interactAction.WasPressedThisFrame())
                 Current.Interact(gameObject);
         }
         

@@ -21,11 +21,11 @@ MonoBehaviour:
   festival: 3
   prerequisites: []
   objectives:
-  - type: 1
-    targetId: weed
-    item: {fileID: 0}
+  - type: 0
+    targetId: 
+    item: {fileID: 11400000, guid: b63b802bf5bda4488b78fd7aaefee675, type: 2}
     requiredCount: 5
-    description: "\uBB18\uC9C0\uC758 \uC7A1\uCD08 \uCC98\uCE58"
+    description: "\uBB18\uC9C0\uC758 \uC7A1\uCD08 5\uD3EC\uAE30 \uBCA0\uAE30"
   rewards:
   - item: {fileID: 11400000, guid: e7eb06943996b6441836ca567dc9c267, type: 2}
     count: 1
