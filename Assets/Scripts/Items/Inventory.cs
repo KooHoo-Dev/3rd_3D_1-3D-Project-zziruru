@@ -64,7 +64,9 @@ namespace SesiVillage.Items
 
         /// <summary>내용이 바뀌었을 때 (인벤토리 UI, 알림, 자동 저장이 듣는다)</summary>
         public event Action Changed;
-        
+        /// <summary>자리가 없어 넣지 못했을 때 (아이템, 개수) — 알림 "가방이 가득 찼습니다"가 듣는다. 줍기·드롭·보상 어디서 실패해도 여기로 모임</summary>
+        public event Action<ItemDefinition, int> AddFailed;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -149,7 +151,12 @@ namespace SesiVillage.Items
         /// <summary>넣기. 자리가 모자라면 하나도 넣지 않고 false</summary>
         public bool Add(ItemDefinition item, int amount = 1)
         {
-            if (!CanAdd(item, amount)) return false;
+            if (!CanAdd(item, amount))
+            {
+                // 아이템이 비었거나 개수가 0 이하인 건 호출 실수라 알리지 않음 — "자리가 없음"일 때만
+                if (item != null && amount > 0) AddFailed?.Invoke(item, amount);
+                return false;
+            }
             Fill(SlotsFor(item), item, amount);
             Changed?.Invoke();
             return true;

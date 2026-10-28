@@ -1,6 +1,5 @@
 ﻿title: jeongeoeon
 ---
-<<declare $turn_in = "">>
 <<declare $deliver = "">>
 <<if quest_state("seollal_weed") == "NotAccepted">>
     정어언: 어서 와요. 설 차례를 지내야 하는데 묘지에 잡초가 무성해서 큰일이에요.
@@ -12,23 +11,23 @@
         정어언: 그래요, 마음 바뀌면 다시 와요.
 <<elseif quest_state("seollal_weed") == "Rewarded">>
     정어언: 새해 복 많이 받아요! 떡국은 칠성당에 바쳤어요?
-<<elseif quest_state("seollal_weed") == "Completed">>
-    <<turn_in seollal_weed>>
-    <<if $turn_in == "Rewarded">>
-        정어언: 아까 못 준 떡국이에요. 이제 들어가겠네요!
-        정어언: 칠성당에 바치면 좋은 일이 있을 거예요.
-    <<else>>
-        정어언: 아직도 가방이 가득하네요. 비우고 다시 와요.
-    <<endif>>
+<<elseif quest_state("seollal_weed") == "InProgress" and not can_hand_in("seollal_weed")>>
+    정어언: 잡초가 아직 모자라요. 다섯 포기예요.
 <<else>>
-    <<turn_in seollal_weed>>
-    <<if $turn_in == "Rewarded">>
-        정어언: 다 베어 왔네요! 자, 떡국 한 그릇 받아요.
-        정어언: 칠성당에 바치면 좋은 일이 있을 거예요.
-    <<elseif $turn_in == "InventoryFull">>
-        정어언: 가방이 가득 찼네요. 조금 비우고 다시 와요.
+    // ── 1단계: 잡초 내기 (보상 대기 중이면 이미 냈으니 건너뜀)
+    <<if quest_state("seollal_weed") == "InProgress">>
+        정어언: 다 베어 왔네요! 잡초는 제가 받을게요.
+        <<hand_in seollal_weed>>
     <<else>>
-        정어언: 잡초가 아직 모자라요. 다섯 포기예요.
+        정어언: 다시 왔네요.
+    <<endif>>
+    // ── 2단계: 떡국 받기 (잡초가 빠진 가방 그대로 확인)
+    <<if can_receive_reward("seollal_weed")>>
+        정어언: 자, 떡국 한 그릇 받아요.
+        <<give_reward seollal_weed>>
+        정어언: 칠성당에 바치면 좋은 일이 있을 거예요.
+    <<else>>
+        정어언: 그런데 가방이 가득해서 떡국을 못 넣겠어요. 비우고 다시 와요.
     <<endif>>
 <<endif>>
 ===
@@ -42,14 +41,25 @@ title: chilseongdang
     <<if quest_state("seollal_shrine") == "NotAccepted">>
         <<accept seollal_shrine>>
     <<endif>>
-    <<deliver seollal_shrine chilseongdang>>
-    <<turn_in seollal_shrine>>
-    <<if $turn_in == "Rewarded">>
-        칠성당: 정성이 담긴 떡국이구나. 이 설빔을 입고 새해를 맞이하거라.
-    <<elseif $turn_in == "InventoryFull">>
-        칠성당: 옷을 넣을 자리가 없구나. 짐을 비우고 다시 오거라.
-    <<else>>
+    <<if deliver_check("seollal_shrine", "chilseongdang") == "Missing">>
         칠성당: 떡국을 가져오너라. 설날집 정어언이 끓이고 있단다.
+    <<else>>
+        // ── 떡국 바치기 (이미 바쳤으면 건너뜀)
+        <<if deliver_check("seollal_shrine", "chilseongdang") == "Delivered">>
+            칠성당: 정성이 담긴 떡국이구나.
+            <<deliver seollal_shrine chilseongdang>>
+        <<endif>>
+        // ── 1단계: 목표를 다 채웠으니 보상 대기로 (모으기 아이템이 없어서 가져가는 건 없음)
+        <<if can_hand_in("seollal_shrine")>>
+            <<hand_in seollal_shrine>>
+        <<endif>>
+        // ── 2단계: 설빔
+        <<if can_receive_reward("seollal_shrine")>>
+            칠성당: 이 설빔을 입고 새해를 맞이하거라.
+            <<give_reward seollal_shrine>>
+        <<else>>
+            칠성당: 옷을 넣을 자리가 없구나. 짐을 비우고 다시 오거라.
+        <<endif>>
     <<endif>>
 <<endif>>
 ===

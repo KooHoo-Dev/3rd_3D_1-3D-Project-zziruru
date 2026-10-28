@@ -5,15 +5,6 @@ using UnityEngine;
 
 namespace SesiVillage.Quests
 {
-    /// <summary>퀘스트를 NPC에게 보고(제출)한 결과. 대화가 이 값을 보고 대사를 고른다</summary>
-    public enum TurnInResult
-    {
-        WrongState,      // 받지 않았거나 이미 끝난 퀘스트
-        Missing,         // 목표가 아직 모자람 → NPC가 필요한 것을 다시 말함
-        InventoryFull,   // 목표는 채웠지만 보상을 넣을 자리가 없음 → Completed로 남고 다음에 다시
-        Rewarded,        // 완료 + 보상 받음
-    }
-
     /// <summary>퀘스트 하나의 물건을 NPC에게 건넨 결과. 대화가 이 값을 보고 대사를 고른다</summary>
     public enum DeliverResult
     {
@@ -27,11 +18,11 @@ namespace SesiVillage.Quests
     /// 모든 퀘스트의 진행 상태를 관리한다. Core 씬에 하나만 둔다 (싱글톤).
     /// - 정의(QuestDefinition)는 읽기만, 상태(QuestProgress)는 여기서만 바꾼다
     /// - 상태는 NotAccepted → InProgress → Completed → Rewarded 순서로 한 칸씩만 바뀐다
-    /// - 완료 판단은 NPC에게 보고(TryTurnIn)할 때 한 번만 한다
+    /// - 보고는 두 단계: HandIn(목표 확인 → 모으기 아이템 가져감 → Completed) → GiveRewards(자리 확인 → 보상 → Rewarded)
     ///   · Kill·Talk·Deliver: 일어날 때마다 센 개수로 판단
     ///   · Collect: 보고하는 순간 인벤토리에 가진 개수로 판단, 완료하면 그만큼 가져감
     /// - 몬스터는 Report()로 "무슨 일이 있었는지"만 알리고, 어떤 퀘스트가 자기를 세는지 모른다
-    /// - NPC 대화는 플레이어가 고른 퀘스트 하나를 정해서 Deliver()·TryTurnIn()을 부른다
+    /// - NPC 대화는 플레이어가 고른 퀘스트 하나를 정해서 Deliver()·HandIn()·GiveRewards()를 부른다 (대본은 Can… 함수로 먼저 묻고 대사 뒤에 부름)
     ///   (한 NPC에 여러 퀘스트가 걸릴 수 있음 → GetQuestsFor()로 목록을 받아 선택지를 만든다)
     /// </summary>
     public class QuestManager : MonoBehaviour
@@ -53,6 +44,9 @@ namespace SesiVillage.Quests
         public event Action<QuestDefinition, int, int> ObjectiveProgressed;
         /// <summary>보상을 인벤토리에 넣은 뒤 (아이템, 개수) — 알림·효과음이 듣는다. 인벤토리에는 이미 들어가 있으니 다시 넣지 말 것</summary>
         public event Action<ItemDefinition, int> RewardGranted;
+        /// <summary>보상을 넣을 자리가 없어 보류했을 때 (Completed로 남음) — 알림 "가방이 가득 찼습니다"가 듣는다.
+        /// 보상은 CanAddAll로 미리 확인하고 Add를 부르지 않으므로 Inventory.AddFailed가 나가지 않아 따로 알린다</summary>
+        public event Action<QuestDefinition> RewardBlocked;
 
         private void Awake()
         {
@@ -203,25 +197,14 @@ namespace SesiVillage.Quests
         /// </summary>
         public DeliverResult Deliver(string questId, string npcId)
         {
-            if (!TryGetProgress(questId, out var p) || p.state != QuestState.InProgress) return DeliverResult.WrongState;
-            var objectives = definitions[questId].Objectives;
-
-            // 1) 이 NPC에게 줄, 아직 안 준 목표들의 필요 개수를 아이템별로 합친다
-            var needed = new Dictionary<ItemDefinition, int>();
-            for (int i = 0; i < objectives.Count; i++)
-            {
-                if (!IsPendingDelivery(objectives[i], p.counts[i], npcId)) continue;
-                needed.TryGetValue(objectives[i].Item, out int sum);
-                needed[objectives[i].Item] = sum + objectives[i].RequiredCount;
-            }
-            if (needed.Count == 0) return DeliverResult.NothingToDeliver;
-
-            // 2) 전부 가지고 있는지 먼저 확인 (하나라도 모자라면 아무것도 안 줌)
-            foreach (var need in needed)
-                if (inventory.Count(need.Key) < need.Value) return DeliverResult.Missing;
+            // 1~2) 건넬 수 있는지는 미리 계산과 같은 함수로 (판단 기준을 한 곳에만)
+            var check = CheckDeliver(questId, npcId);
+            if (check != DeliverResult.Delivered) return check;
 
             // 3) 한꺼번에 빼고 목표를 채운다
-            foreach (var need in needed) inventory.Remove(need.Key, need.Value);
+            var p = progress[questId];
+            var objectives = definitions[questId].Objectives;
+            foreach (var need in NeededDeliveries(questId, p, npcId)) inventory.Remove(need.Key, need.Value);
             for (int i = 0; i < objectives.Count; i++)
             {
                 if (!IsPendingDelivery(objectives[i], p.counts[i], npcId)) continue;
@@ -231,40 +214,72 @@ namespace SesiVillage.Quests
             return DeliverResult.Delivered;
         }
 
-        /// <summary>
-        /// 퀘스트를 준 NPC에게 보고한다. 모든 목표를 채웠으면 모으기 아이템을 가져가고 → Completed → 보상 → Rewarded.
-        /// 이미 Completed(전에 인벤토리가 꽉 차서 보상을 못 받음)면 보상만 다시 시도한다 (아이템을 다시 내지 않음)
-        /// </summary>
-        public TurnInResult TryTurnIn(string questId)
+        /// <summary>Deliver를 지금 부르면 어떻게 될지 계산만 한다 (아무것도 바꾸지 않음). Delivered = "부르면 건네진다"</summary>
+        public DeliverResult CheckDeliver(string questId, string npcId)
         {
-            if (!TryGetProgress(questId, out var p)) return TurnInResult.WrongState;
-            // 보고할 수 있는 건 진행 중이거나, 완료했지만 보상을 못 받은 퀘스트뿐 (NotAccepted·Rewarded는 여기서 끝)
-            if (p.state != QuestState.InProgress && p.state != QuestState.Completed) return TurnInResult.WrongState;
-
-            if (p.state == QuestState.InProgress)
-            {
-                if (GetUnmetObjectives(questId).Count > 0) return TurnInResult.Missing;
-
-                // 모으기 아이템을 가져간다 (필요한 만큼만, 남는 건 플레이어 것)
-                foreach (var objective in definitions[questId].Objectives)
-                    if (objective.Type == ObjectiveType.Collect)
-                        inventory.Remove(objective.Item, objective.RequiredCount);
-                SetState(questId, QuestState.Completed);
-            }
-
-            // 여기서는 항상 Completed
-            return GiveRewards(questId) ? TurnInResult.Rewarded : TurnInResult.InventoryFull;
+            if (!TryGetProgress(questId, out var p) || p.state != QuestState.InProgress) return DeliverResult.WrongState;
+            var needed = NeededDeliveries(questId, p, npcId);
+            if (needed.Count == 0) return DeliverResult.NothingToDeliver;
+            foreach (var need in needed)
+                if (inventory.Count(need.Key) < need.Value) return DeliverResult.Missing;
+            return DeliverResult.Delivered;
         }
 
-        /// <summary>Completed → Rewarded. 보상을 전부 넣을 자리가 없으면 아무것도 안 넣고 false (Completed로 남음)</summary>
-        private bool GiveRewards(string questId)
+        /// <summary>이 NPC에게 줄, 아직 안 준 목표들의 필요 개수를 아이템별로 합친다 (예: 가죽 1 + 모피 5)</summary>
+        private Dictionary<ItemDefinition, int> NeededDeliveries(string questId, QuestProgress p, string npcId)
         {
+            var needed = new Dictionary<ItemDefinition, int>();
+            var objectives = definitions[questId].Objectives;
+            for (int i = 0; i < objectives.Count; i++)
+            {
+                if (!IsPendingDelivery(objectives[i], p.counts[i], npcId)) continue;
+                needed.TryGetValue(objectives[i].Item, out int sum);
+                needed[objectives[i].Item] = sum + objectives[i].RequiredCount;
+            }
+            return needed;
+        }
+
+        /// <summary>
+        /// 보고 1단계를 할 수 있는가: 진행 중이고 모든 목표를 채웠나 (가방 자리는 보지 않음 — 그건 2단계 CanReceiveReward)
+        /// </summary>
+        public bool CanHandIn(string questId)
+        {
+            return TryGetProgress(questId, out var p) && p.state == QuestState.InProgress && GetUnmetObjectives(questId).Count == 0;
+        }
+
+        /// <summary>
+        /// 보고 1단계: InProgress → Completed. 모으기 아이템을 가져간다 (필요한 만큼만, 남는 건 플레이어 것).
+        /// 보상은 주지 않는다 → 2단계 GiveRewards. 가방이 꽉 차도 여기까지는 됨 (기획 6장: 잡초는 가져가고 보상 대기)
+        /// </summary>
+        public bool HandIn(string questId)
+        {
+            if (!CanHandIn(questId)) return false;
+            foreach (var objective in definitions[questId].Objectives)
+                if (objective.Type == ObjectiveType.Collect)
+                    inventory.Remove(objective.Item, objective.RequiredCount);
+            SetState(questId, QuestState.Completed);
+            return true;
+        }
+
+        /// <summary>보고 2단계를 할 수 있는가: 보상 대기(Completed)이고 보상을 전부 넣을 자리가 있나</summary>
+        public bool CanReceiveReward(string questId)
+        {
+            return TryGetProgress(questId, out var p) && p.state == QuestState.Completed
+                   && inventory.CanAddAll(definitions[questId].Rewards);
+        }
+
+        /// <summary>보고 2단계: Completed → Rewarded. 보상을 전부 넣을 자리가 없으면 아무것도 안 넣고 false (Completed로 남음)</summary>
+        public bool GiveRewards(string questId)
+        {
+            // 보상 대기 상태에서만 (아직 안 냈거나 이미 받은 퀘스트에 보상이 두 번 나가지 않게)
+            if (!TryGetProgress(questId, out var p) || p.state != QuestState.Completed) return false;
             var rewards = definitions[questId].Rewards;
 
             // 보상 전부를 함께 넣을 자리가 있는지 한 번에 확인 (하나씩 물으면 같은 빈 칸을 두 번 셀 수 있음)
             if (!inventory.CanAddAll(rewards))
             {
                 Debug.LogWarning($"[QuestManager] 인벤토리에 자리가 없어 보상 보류: {questId}");
+                RewardBlocked?.Invoke(definitions[questId]);
                 return false;
             }
 
