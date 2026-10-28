@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1723eb202ff945a692132430df14dce2, type: 3}
+  m_Name: Item_Sample_TravelerCoat
+  m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Items.ItemDefinition
+  id: sample_traveler_coat
+  displayName: "\uB098\uADF8\uB124 \uAC89\uC637"
+  description: "(\uC2DC\uD5D8\uC6A9) \uBA3C \uAE38\uC744 \uAC78\uC5B4\uC628 \uB098\uADF8\uB124\uC758
+    \uAC89\uC637."
+  icon: {fileID: 21300000, guid: 058715af680b04ab9b379f65dcb8560a, type: 3}
+  type: 1
+  isQuestItem: 0
+  questMaxStack: 1
+  outfitSlot: 0
+  outfitParts:
+  - partName: Outerwear
+    mesh: {fileID: 1617087265200637012, guid: 7bd2259758164610a2b85b19f7a0c2a5, type: 3}
+    changeColor: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+  weaponLook:
+    mesh: {fileID: 0}
+    material: {fileID: 0}
+    changeColor: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}

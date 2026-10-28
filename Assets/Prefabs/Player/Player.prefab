@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 8044742640323187917}
   - component: {fileID: 1436803308276542600}
   - component: {fileID: 361425787506326163}
+  - component: {fileID: 4795557635861360910}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -284,6 +285,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Player.CombatStance
   relaxDelay: 5
   blendTime: 0.4
+--- !u!114 &4795557635861360910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a91e6389304e4dbea264705ac0d1ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Player.WeaponAppearance
+  swords:
+  - {fileID: 629651416}
+  - {fileID: 5824281605900483739}
 --- !u!1 &629156792
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,6 +646,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6259040802341638087, guid: 9613013251efb485dba5ebbeb34a32bb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6259431001321476706}
+    - targetCorrespondingSourceObject: {fileID: 6259040802341638087, guid: 9613013251efb485dba5ebbeb34a32bb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1795237811398863703}
   m_SourcePrefab: {fileID: 100100000, guid: 9613013251efb485dba5ebbeb34a32bb, type: 3}
 --- !u!1 &1340883264311178479 stripped
 GameObject:
@@ -654,6 +673,18 @@ MonoBehaviour:
   isUsed: 0
   leftHandPositionWeight: 0
   leftHandRotationWeight: 0
+--- !u!114 &1795237811398863703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340883264311178479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98cef0870b68c4955a00a24fee24b34a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Player.OutfitAppearance
 --- !u!4 &1745813918118638799 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6664538864961687527, guid: 9613013251efb485dba5ebbeb34a32bb, type: 3}

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1723eb202ff945a692132430df14dce2, type: 3}
+  m_Name: Item_Mokdo
+  m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Items.ItemDefinition
+  id: mokdo
+  displayName: "\uBAA9\uB3C4"
+  description: "\uB098\uBB34\uB97C \uAE4E\uC544 \uB9CC\uB4E0 \uCE7C. \uCC98\uC74C\uBD80\uD130
+    \uB4E4\uACE0 \uC788\uB358 \uBB34\uAE30."
+  icon: {fileID: 21300000, guid: fc0d5b32dbfc54d148ef516d25860cfe, type: 3}
+  type: 3
+  isQuestItem: 0
+  questMaxStack: 1
+  outfitSlot: 0
+  outfitParts: []
+  weaponLook:
+    mesh: {fileID: 0}
+    material: {fileID: 0}
+    changeColor: 1
+    color: {r: 0.7254902, g: 0.50980395, b: 0.3137255, a: 1}
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}

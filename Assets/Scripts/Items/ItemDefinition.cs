@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace SesiVillage.Items
@@ -21,6 +23,54 @@ namespace SesiVillage.Items
     }
     
     /// <summary>
+    /// 옷을 입는 자리. 자리마다 한 벌씩 따로 입는다 (상의를 바꿔도 하의는 그대로).
+    /// 한 벌 옷(FullBody, 원피스·설빔처럼 위아래가 붙은 옷)은 상의·하의 자리를 함께 차지한다.
+    /// </summary>
+    public enum OutfitSlot
+    {
+        Top = 0,        // 상의 (겉옷)
+        Bottom = 1,     // 하의 (바지)
+        Hat = 2,        // 모자
+        Shoes = 3,      // 신발
+        FullBody = 4,   // 한 벌 옷 — 상의·하의 자리를 함께 씀
+    }
+
+    /// <summary>옷을 입으면 캐릭터의 한 부위가 어떻게 바뀌는가 (Outfit 아이템만 씀)</summary>
+    [Serializable]
+    public class OutfitPart
+    {
+        [Tooltip("캐릭터 모델에서 바꿀 부위 오브젝트 이름 (Outerwear, Pants, Hairstyle, Shoes …)")]
+        public string partName;
+        [Tooltip("바꿀 모양 (Creative Characters의 Meshes 폴더 FBX 안 메시). 비우면 모양은 그대로")]
+        public Mesh mesh;
+        [Tooltip("켜면 아래 색을 곱해서 입힘")]
+        public bool changeColor;
+        public Color color = Color.white;
+    }
+
+    /// <summary>
+    /// 무기 모습 (Weapon 아이템만 씀). 무기는 모두 양손검 동작을 쓰고(기획 6장 "무기 교체 범위"), 모양만 바뀐다.
+    /// 칼 오브젝트(손·등) 안에 이 모양을 그린다 — 위치·회전·크기는 원래 칼 모양 기준
+    /// </summary>
+    [Serializable]
+    public class WeaponLook
+    {
+        [Tooltip("무기 모양. 비우면 원래 칼 모양 그대로 (목도)")]
+        public Mesh mesh;
+        [Tooltip("모양에 입힐 재질. 비우면 원래 칼 재질")]
+        public Material material;
+        [Tooltip("켜면 아래 색을 곱해서 입힘")]
+        public bool changeColor;
+        public Color color = Color.white;
+        [Tooltip("원래 칼 기준 위치 (모양을 바꿀 때만)")]
+        public Vector3 position;
+        [Tooltip("원래 칼 기준 회전 (모양을 바꿀 때만)")]
+        public Vector3 rotation;
+        [Tooltip("원래 칼 기준 크기 (모양을 바꿀 때만)")]
+        public Vector3 scale = Vector3.one;
+    }
+
+    /// <summary>
     /// 아이템 정의 (게임 중에 바뀌지 않는 정보). 몇 개 가지고 있는지는 인벤토리가 따로 관리한다.
     /// </summary>
     [CreateAssetMenu(fileName = "Item_", menuName = "SesiVillage/Item Definition")]
@@ -41,6 +91,15 @@ namespace SesiVillage.Items
         [Tooltip("퀘스트 물건일 때만 사용: 한 칸에 몇 개까지 쌓이는가. 아니면 종류로 정해짐 (무기·옷 1, 먹을 것·재료 99)")]
         [Min(1)]
         [SerializeField] private int questMaxStack = 1;
+
+        [Header("옷 (종류가 Outfit일 때만)")]
+        [Tooltip("입는 자리. 같은 자리의 옷끼리만 바뀐다 (한 벌 옷은 상의·하의를 함께 벗김)")]
+        [SerializeField] private OutfitSlot outfitSlot = OutfitSlot.Top;
+        [Tooltip("입으면 바뀌는 부위들")]
+        [SerializeField] private List<OutfitPart> outfitParts = new List<OutfitPart>();
+
+        [Header("무기 (종류가 Weapon일 때만)")]
+        [SerializeField] private WeaponLook weaponLook = new WeaponLook();
         
         public string Id => id;
         public string DisplayName => displayName;
@@ -48,6 +107,9 @@ namespace SesiVillage.Items
         public Sprite Icon => icon;
         public ItemType Type => type;
         public bool IsQuestItem => isQuestItem;
+        public OutfitSlot OutfitSlot => outfitSlot;
+        public IReadOnlyList<OutfitPart> OutfitParts => outfitParts;
+        public WeaponLook WeaponLook => weaponLook;
         
         /// <summary>한 칸에 몇 개까지 쌓이는가. 퀘스트 물건은 에셋 값, 아니면 종류로 정해진다</summary>
         public int MaxStack

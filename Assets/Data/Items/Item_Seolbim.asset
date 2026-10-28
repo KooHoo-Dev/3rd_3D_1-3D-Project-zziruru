@@ -16,7 +16,25 @@ MonoBehaviour:
   displayName: "\uC124\uBE54"
   description: "\uB9C8\uC744 \uC0AC\uB78C\uB4E4\uC774 \uC9C0\uC5B4 \uC900 \uC124\uBE54.
     \uC774\uC81C \uB108\uB3C4 \uB9C8\uC744 \uC0AC\uB78C\uC774\uB2E4."
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 24fc883e80f784339965a7a4d30878d9, type: 3}
   type: 1
   isQuestItem: 1
   questMaxStack: 1
+  outfitSlot: 4
+  outfitParts:
+  - partName: Outerwear
+    mesh: {fileID: -3950228387462889971, guid: ec43f29a8b8d4f6b895e2518035c2e2e, type: 3}
+    changeColor: 1
+    color: {r: 0.8627451, g: 0.23529412, b: 0.23529412, a: 1}
+  - partName: Pants
+    mesh: {fileID: -4396149814923931179, guid: 3759908ff23c45529985ee7622fd270d, type: 3}
+    changeColor: 1
+    color: {r: 0.23529412, g: 0.27450982, b: 0.43137255, a: 1}
+  weaponLook:
+    mesh: {fileID: 0}
+    material: {fileID: 0}
+    changeColor: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}

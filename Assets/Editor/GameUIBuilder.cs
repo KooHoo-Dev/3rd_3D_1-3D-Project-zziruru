@@ -18,7 +18,7 @@ namespace SesiVillage.EditorTools
     ///    │                                             └ Overflow ("+N")
     ///    └ QuestTracker (QuestTrackerView) ─ Entry(원본, 꺼짐) ─ TitleRow ─ Title / Objectives
     ///   MenuCanvas (Sort Order 20 — 대화창(10) 위)
-    ///    ├ InventoryScreen (CanvasGroup + InventoryScreen) ─ Dim / Window ─ Tabs ×3 / TabTitle / Grid ─ Slot(원본, 꺼짐) / Hint
+    ///    ├ InventoryScreen (CanvasGroup + InventoryScreen) ─ Dim / Window ─ Preview ─ PreviewImage(RawImage) / Tabs ×3 / TabTitle / Grid ─ Slot(원본, 꺼짐) / Hint
     ///    ├ QuestLogScreen (CanvasGroup + QuestLogScreen) ─ Dim / Window ─ List ─ Header·Entry(원본) / Empty / Detail / Hint
     ///    └ TooltipLayer ─ Tooltip (ItemTooltipView) — 맨 마지막 형제라 항상 위에 그려짐
     /// 이미 있으면 지우고 다시 만든다 (몇 번 눌러도 결과가 같음). Ctrl+Z로 되돌릴 수 있음. 색·크기는 임시 (UI 스킨은 나중에 — 기획 미정 1번)
@@ -59,6 +59,7 @@ namespace SesiVillage.EditorTools
             BuildInventory(menu, tooltip);
             BuildQuestLog(menu);
             tooltip.transform.parent.SetAsLastSibling();   // 그리는 순서는 맨 위로
+            OutfitSetupBuilder.WirePreviewUI();             // 미리보기 무대가 이미 있으면 새 인벤토리 화면에 다시 연결
 
             EditorSceneManager.MarkSceneDirty(hud.scene);
             Selection.activeGameObject = menu.gameObject;
@@ -226,11 +227,21 @@ namespace SesiVillage.EditorTools
 
         private static void BuildInventory(Canvas menu, ItemTooltipView tooltip)
         {
-            var root = ScreenRoot("InventoryScreen", menu.transform, out var window, new Vector2(740f, 800f), "소지품", "I / Esc  닫기 · 칸에 마우스를 올리면 설명");
+            var root = ScreenRoot("InventoryScreen", menu.transform, out var window, new Vector2(1140f, 800f), "소지품", "I / Esc  닫기 · 칸에 마우스를 올리면 설명 · 옷을 누르면 입기/벗기 · 캐릭터를 끌면 회전");
+
+            // 왼쪽: 캐릭터 미리보기 (젤다식). 미리보기 카메라가 그린 RenderTexture를 여기에 보여 준다
+            //   RawImage = Texture를 그대로 보여 주는 UI (Image는 Sprite만 받음 → RenderTexture는 RawImage)
+            //   Texture 칸과 회전 스크립트(CharacterPreviewDrag)는 OutfitSetupBuilder가 연결 (아래 Build 끝에서도 다시 연결)
+            var preview = Rect("Preview", window);
+            Anchor(preview, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(30f, -80f), new Vector2(380f, 640f));
+            Img(preview, new Color32(20, 15, 10, 255), false);
+            var previewImage = Rect("PreviewImage", preview);
+            Stretch(previewImage, 0f, 0f, 0f, 0f);
+            previewImage.gameObject.AddComponent<RawImage>().raycastTarget = true;   // 끌어서 돌리기 입력을 받음
 
             // 탭 3개
             var tabs = Rect("Tabs", window);
-            Anchor(tabs, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -80f), new Vector2(660f, 50f));
+            Anchor(tabs, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(200f, -80f), new Vector2(660f, 50f));
             var tabsLayout = tabs.gameObject.AddComponent<HorizontalLayoutGroup>();
             tabsLayout.spacing = 10f;
             tabsLayout.childControlWidth = true;
@@ -252,12 +263,12 @@ namespace SesiVillage.EditorTools
             }
 
             var tabTitle = Text("TabTitle", window, "아이템 · 재료", 22f, TextAlignmentOptions.MidlineLeft);
-            Anchor(tabTitle.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(40f, -140f), new Vector2(400f, 36f));
+            Anchor(tabTitle.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(440f, -140f), new Vector2(400f, 36f));
             tabTitle.color = Gold;
 
             // 칸 격자: 6열, 26칸이면 5줄
             var grid = Rect("Grid", window);
-            Anchor(grid, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -185f), new Vector2(660f, 540f));
+            Anchor(grid, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(200f, -185f), new Vector2(660f, 540f));
             var gridLayout = grid.gameObject.AddComponent<GridLayoutGroup>();
             gridLayout.cellSize = new Vector2(100f, 100f);
             gridLayout.spacing = new Vector2(12f, 12f);
