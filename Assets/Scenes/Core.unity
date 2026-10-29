@@ -1435,6 +1435,8 @@ MonoBehaviour:
   startingItems:
   - item: {fileID: 11400000, guid: b63b802bf5bda4488b78fd7aaefee675, type: 2}
     count: 5
+  - item: {fileID: 11400000, guid: 744ac6cec7cd440988fda1abceac324c, type: 2}
+    count: 1
 --- !u!1 &359877625
 GameObject:
   m_ObjectHideFlags: 0
@@ -4885,6 +4887,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868180608}
   m_CullTransparentMesh: 1
+--- !u!1 &902186644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 902186645}
+  - component: {fileID: 902186646}
+  m_Layer: 0
+  m_Name: PlayerEquipment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &902186645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902186644}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1136371745}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &902186646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902186644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e98d543f0d2892540b864375c2fefbba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Items.PlayerEquipment
+  inventory: {fileID: 343605518}
+  startingEquipment: []
 --- !u!1 &907289370
 GameObject:
   m_ObjectHideFlags: 0
@@ -5699,6 +5747,7 @@ Transform:
   - {fileID: 343605517}
   - {fileID: 1151171488}
   - {fileID: 1219185178}
+  - {fileID: 902186645}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1144441345
@@ -7304,6 +7353,7 @@ MonoBehaviour:
     maxVisible: 3
     displaySeconds: 3
     mergeWindowSeconds: 1.5
+    showInterval: 0.25
   freezeWhileUIOpen: 0
   stack: {fileID: 907289371}
   cardTemplate: {fileID: 1421160722}
