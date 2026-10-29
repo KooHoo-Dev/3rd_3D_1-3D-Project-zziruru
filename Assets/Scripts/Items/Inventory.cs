@@ -38,6 +38,15 @@ namespace SesiVillage.Items
             else { Item = item; Count = count; }
         }
     }
+    
+    /// <summary>
+    /// 가방에 있지만 지금 빼면 안 되는 개수를 알려 주는 쪽 (예: 입고 있는 장비 → 1).
+    /// 인벤토리는 "왜" 빼면 안 되는지 모른다 — 묻기만 한다 (장비 시스템을 모르게)
+    /// </summary>
+    public interface IItemReservation
+    {
+        int ReservedCount(ItemDefinition item);
+    }
 
     /// <summary>
     /// 플레이어 인벤토리. 위쪽 탭(무기 / 옷 / 아이템·재료)마다 칸 목록이 따로 있다.

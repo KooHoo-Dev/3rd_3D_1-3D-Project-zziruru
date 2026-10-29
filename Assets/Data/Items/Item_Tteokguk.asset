@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1723eb202ff945a692132430df14dce2, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f0d6dea136b5ef499a414d0990d7075, type: 3}
   m_Name: Item_Tteokguk
   m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Items.ItemDefinition
   id: tteokguk
@@ -17,6 +17,5 @@ MonoBehaviour:
   description: "\uC124\uB0A0\uC9D1 \uC815\uC5B4\uC5B8\uC774 \uB053\uC5EC \uC900 \uB5A1\uAD6D.
     \uCE60\uC131\uB2F9\uC5D0 \uBC14\uCE58\uC790."
   icon: {fileID: 0}
-  type: 0
   isQuestItem: 1
   questMaxStack: 5

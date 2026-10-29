@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1723eb202ff945a692132430df14dce2, type: 3}
+  m_Script: {fileID: 11500000, guid: d200a025a5513b34c98b1e901583d292, type: 3}
   m_Name: Item_Weed
   m_EditorClassIdentifier: Assembly-CSharp::SesiVillage.Items.ItemDefinition
   id: weed
   displayName: "\uC7A1\uCD08"
-  description: 
+  description: "\uBB18\uC9C0\uC5D0\uC11C \uBCA4 \uC7A1\uCD08. \uC124\uB0A0\uC9D1
+    \uC815\uC5B4\uC5B8\uC5D0\uAC8C \uAC00\uC838\uAC00\uC790."
   icon: {fileID: 0}
-  type: 2
   isQuestItem: 0
   questMaxStack: 1
